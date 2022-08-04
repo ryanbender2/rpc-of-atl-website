@@ -1,17 +1,16 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import { Switch } from '@mui/material'
+import { useContext, useState } from 'react'
 import RPCHead from '../components/RPCHead'
-import styles from '../styles/Home.module.css'
+import { ColorModeContext } from '../lib/theme'
 
 
-export default function Home(): JSX.Element {
+export default function Home() {
+  
   return (
-    <div className={styles.container}>
-      <RPCHead title="Reformation Presbyterian Church of Atlanta" />
-
+    <div>
+      <RPCHead title="RPC of Atlanta" />
       <main>
-
+        
       </main>
     </div>
   )
