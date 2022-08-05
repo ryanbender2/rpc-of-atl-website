@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
-        <Container disableGutters>
+        <Container disableGutters style={{ minWidth: '100%' }}>
           <Header />
           <Component {...pageProps} />
           <Footer />
