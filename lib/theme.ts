@@ -13,6 +13,9 @@ export function getTheme(mode: 'light' | 'dark') {
                 main: '#6757F4',
             }
         },
+        typography: {
+            fontFamily: 'roboto'
+        }
     }));
 }
 
