@@ -33,6 +33,7 @@ const firebaseApp = createFirebaseApp(firebaseConfig);
 
 // Auth exports
 export const auth = getAuth(firebaseApp);
+export const googleAuthProvider = new GoogleAuthProvider();
 
 // Firestore export
 export const firestore = getFirestore(firebaseApp);
@@ -49,4 +50,17 @@ export function postToJSON(doc: DocumentSnapshot) {
         createdAt: data?.createdAt.toMillis() || 0,
         updatedAt: data?.updatedAt.toMillis() || 0,
     };
+}
+
+/**`
+ * Gets a users/{uid} document
+ * @param  {string} userId
+ */
+export async function getUser(userId: string) {
+    const q = query(
+        collection(getFirestore(firebaseApp), 'users'),
+        limit(1)
+    )
+    var queryDocs = (await getDocs(q)).docs;
+    return queryDocs && queryDocs.length > 0 ? queryDocs[0] : null;
 }

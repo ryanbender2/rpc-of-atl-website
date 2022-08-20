@@ -5,9 +5,7 @@ import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
 
 
 export default function Index() {
-    const [output, setOutput] = useState("");
     const [textValue, setTextValue] = useState("text")
-    const [textEditable, setTextEditable] = useState(false)
 
     const handleClick = async (event: MouseEvent) => {
         try {
@@ -25,18 +23,15 @@ export default function Index() {
                 born: 1815
             });
             const doc = await getDoc(docRef)
-            setOutput(JSON.stringify(doc.data()))
+            // setOutput(JSON.stringify(doc.data()))
+            console.log(JSON.stringify(doc.data()))
         } catch (e) {
             console.error("Error adding document: ", e);
         }
     }
 
-    const handleValueChange = (event: FormEvent<HTMLDivElement>) => {
+    const handleValueChange = (event: MouseEvent) => {
         setTextValue(event.target.value)
-    }
-
-    const handleEditModeClick = (event: MouseEvent) => {
-        setTextEditable((prev) => !prev)
     }
 
     return (
@@ -48,34 +43,6 @@ export default function Index() {
             mt={5}
             p={10}
         >
-            {/* <Button onClick={handleClick} variant="contained">Test add Doc</Button>
-            <Typography variant='body1'>{output}</Typography> */}
-            {/* <TextareaAutosize
-                aria-label="empty textarea"
-                placeholder=""
-                style={{ width: '40%', height: '200px' }}
-                onChange={handleValueChange}
-                value={textValue}
-            /> */}
-            <Switch onClick={handleEditModeClick}></Switch>
-            <Box
-                border='Highlight'
-                bgcolor='lightblue'
-                minHeight='30vh'
-                minWidth='40%'
-                p={1}
-            >
-                <div
-                    contentEditable={textEditable}
-                    onChange={handleValueChange}
-                    dangerouslySetInnerHTML={{ __html: textValue }}
-                    style={{
-                        background: textEditable ? 'white' : '',
-                        borderRadius: 3
-                    }}
-                >
-                </div>
-            </Box>
 
         </Grid>
     )
