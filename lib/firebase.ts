@@ -1,7 +1,7 @@
 import { initializeApp, getApp, FirebaseApp, FirebaseError, FirebaseOptions } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, where, getDocs, query, limit, DocumentSnapshot, connectFirestoreEmulator, doc, getDoc, Firestore } from "firebase/firestore";
-import { Auth, connectAuthEmulator, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { Auth, AuthProvider, connectAuthEmulator, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig: FirebaseOptions = {
     apiKey: "AIzaSyD9sM92PbJEXu0JyPbrN17KsNpOYbEZLtw",
@@ -33,7 +33,6 @@ const firebaseApp = createFirebaseApp(firebaseConfig);
 
 // Auth exports
 export const auth = getAuth(firebaseApp);
-export const googleAuthProvider = new GoogleAuthProvider();
 
 // Firestore export
 export const firestore = getFirestore(firebaseApp);
@@ -63,4 +62,10 @@ export async function getUser(userId: string) {
     )
     var queryDocs = (await getDocs(q)).docs;
     return queryDocs && queryDocs.length > 0 ? queryDocs[0] : null;
+}
+
+export function signInPopup(provider: AuthProvider) {
+    signInWithPopup(auth, provider).catch(err => {
+        console.log(err.code)
+    })
 }

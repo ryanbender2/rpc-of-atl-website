@@ -9,7 +9,8 @@ export default function Footer() {
             justifyContent="center"
             bgcolor='#1d1d1d'
             color='white'
-            
+            minHeight='325px'
+            alignContent='center'
         >
             footer
         </Grid>
