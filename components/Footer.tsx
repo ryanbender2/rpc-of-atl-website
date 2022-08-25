@@ -1,18 +1,36 @@
 import { Grid, useTheme } from "@mui/material";
+import { getAuth } from "firebase/auth";
+import AdminFab from "./AdminFab";
 
 export default function Footer() {
-    const theme = useTheme()
+    const auth = getAuth()
 
     return (
         <Grid
             container
-            justifyContent="center"
             bgcolor='#1d1d1d'
             color='white'
             minHeight='325px'
-            alignContent='center'
+            columns={12}
         >
-            footer
+            <Grid item xs={4}>
+
+            </Grid>
+            <Grid item xs={4}>
+
+
+            </Grid>
+            <Grid item xs={4}>
+                <Grid
+                    container
+                    justifyContent='end'
+                    alignItems='flex-end'
+                    height='100%'
+                    p={1}
+                >
+                    { auth.currentUser && <AdminFab /> }
+                </Grid>
+            </Grid>
         </Grid>
     )
 }

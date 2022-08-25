@@ -1,9 +1,8 @@
-import { CircularProgress, Grid, Paper, Switch, Typography } from "@mui/material";
+import { CircularProgress, Grid, Paper, Switch, Typography, useTheme, Link } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { useContext, useEffect, useState } from "react";
 import { ColorModeContext } from "../lib/theme";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import Link from "next/link";
 
 export default function ColorModeToggle() {
     const { toggleColorMode } = useContext(ColorModeContext);
@@ -19,9 +18,9 @@ export default function ColorModeToggle() {
             justifyContent="flex-end"
         >
             <Paper elevation={3}>
-                <Link href="/admin/login">
+                <Typography p={1}>
                     <CurrentUser />
-                </Link>
+                </Typography>
             </Paper>
             <Switch onChange={toggleColorMode}></Switch>
             <Typography>Color Mode</Typography>
@@ -39,14 +38,10 @@ const CurrentUser = () => {
         );
     }
     if (error) {
-        return (
-            <Typography variant="body1" p={1}>error: {error.message}</Typography>
-        );
+        return <Link href="/admin/login" sx={{textDecoration: 'none'}}>error: {error.message}</Link>
     }
     if (user) {
-        return (
-            <Typography variant="body1" p={1}>{user.displayName}</Typography>
-        );
+        return <Link href="/admin/login" sx={{textDecoration: 'none'}}>{user.displayName}</Link>
     }
-    return <Typography variant="body1" p={1}>Not Signed In</Typography>
+    return <Link href="/admin/login" sx={{textDecoration: 'none'}}>Sign in</Link>
 };
