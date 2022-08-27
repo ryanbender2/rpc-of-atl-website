@@ -6,6 +6,8 @@ import Image from 'next/image'
 import Router, { useRouter } from "next/router";
 import AccountTab from "../../components/adminTabs/Account";
 import UserSignupCodesTab from "../../components/adminTabs/UserSignupCodes";
+import { getAuth } from "firebase/auth";
+import AdminPageNotSignedIn from "../../components/AdminPageNotSignedIn";
 
 
 enum TAB_NAMES {
@@ -20,7 +22,12 @@ const TABS = new Map<string, JSX.Element>([
 
 
 export default function Index() {
+    const auth = getAuth()
     const { query } = useRouter()
+
+    if (!auth.currentUser) {
+        return <AdminPageNotSignedIn />
+    }
 
     const tab: any = query.tab
     let TabEle = TABS.get(tab ? tab : '')

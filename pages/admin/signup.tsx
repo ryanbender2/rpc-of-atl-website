@@ -1,26 +1,14 @@
 import { Box, Button, Grid, Paper, styled } from "@mui/material"
 import { getAuth } from "firebase/auth"
-import { genSignupCodeForUser } from "../../lib/firebase";
+import { addNewSignupCodeForUser, generateSignupCode } from "../../lib/signupCodes"
 
-
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
 
 export default function Signup() {
     const auth = getAuth()
 
     const handleClick = async () => {
-        const code = await genSignupCodeForUser('Ryan', 'Bender')
-        console.table({
-            code: code,
-            first: 'Ryan',
-            last: 'Bender'
-        })
+        const code = generateSignupCode('Ryan', 'Bender')
+        await addNewSignupCodeForUser(auth.currentUser?.uid, code)
     }
 
     return (

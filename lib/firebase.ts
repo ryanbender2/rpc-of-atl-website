@@ -70,15 +70,7 @@ export function signInPopup(provider: AuthProvider) {
     })
 }
 
-export async function genSignupCodeForUser(firstName: string, lastName: string): Promise<string> {
-    const signupCode = crypto.randomUUID().split('-').slice(0, 3).join('')
-    await setDoc(doc(firestore, 'signupCodes', signupCode), {
-        firstName: firstName.toLowerCase(),
-        lastName: lastName.toLowerCase(),
-        used: false
-    })
-    return signupCode
-}
+
 
 export async function setSignupCodeUsed(signupCode: string): Promise<boolean> {
     const docRef = doc(firestore, 'signupCodes', signupCode)
