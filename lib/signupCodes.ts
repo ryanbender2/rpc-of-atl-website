@@ -8,6 +8,7 @@ export interface SignupCode {
     code: string;
     used: boolean;
     dateCreated: number;
+    dateUsed: number | null;
 }
 
 // await setDoc(doc(firestore, 'signupCodes', signupCode), {
@@ -23,7 +24,8 @@ export function generateSignupCode(firstName: string, lastName: string): SignupC
         lastName: lastName.toLocaleLowerCase(),
         code: signupCode,
         used: false,
-        dateCreated: Date.now()
+        dateCreated: Date.now(),
+        dateUsed: null
     }
 }
 

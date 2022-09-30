@@ -1,22 +1,27 @@
-import { Box, Button, Card, CardActions, CardContent, CircularProgress, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Skeleton, Stack, Typography, useTheme } from "@mui/material";
+import { Alert, Box, Button, Card, CardActions, CardContent, CircularProgress, Divider, Drawer, Fade, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Popper, PopperPlacementType, Skeleton, Snackbar, Stack, Typography, useTheme } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import { useState } from "react";
 import { addNewSignupCodeForUser, generateSignupCode, getSignupCodesForUser, SignupCode } from "../../lib/signupCodes";
 import useSWR, { Fetcher } from 'swr'
+import { toast } from "react-toastify";
+import CreateNewSignupCodeModal from "../CreateNewSignupCodeModal";
 
 
 const fetcher: Fetcher<SignupCode[], string> = (userUid: string) => getSignupCodesForUser(userUid).then(data => data)
 
 export default function UserSignupCodesTab() {
     const auth = getAuth()
-    const { data } = useSWR<SignupCode[]>(auth.currentUser?.uid, fetcher)
+    const { data, mutate } = useSWR<SignupCode[]>(auth.currentUser?.uid, fetcher)
+    const [createCodeModalOpen, setCreateCodeModalOpen] = useState(false)
 
-    const handleClick = async () => {
-        const code = generateSignupCode('ryan', 'bender')
-        await addNewSignupCodeForUser(auth.currentUser?.uid, code)
+    const openCreateCodeForm = () => {
+        setCreateCodeModalOpen(true)
     }
 
-    console.log(data !== undefined)
+    const handleCloseCreateCodeForm = async () => {
+        await mutate()
+        setCreateCodeModalOpen(false)
+    }
 
     return (
         <Grid
@@ -38,12 +43,21 @@ export default function UserSignupCodesTab() {
                     columns={2}
                 >
                     <Grid item xs={1}>
+                        <Box width='100%' display='flex' justifyContent='flex-end' pb={1}>
+                            <Button
+                                variant='contained'
+                                onClick={openCreateCodeForm}
+                            >
+                                new
+                            </Button>
+                        </Box>
                         <SignupCodesList signupCodes={data} />
                     </Grid>
                     <Grid item xs={1}>
                     </Grid>
                 </Grid>
             </Grid>
+            <CreateNewSignupCodeModal open={createCodeModalOpen} handleClose={handleCloseCreateCodeForm} />
         </Grid>
     )
 }
@@ -81,8 +95,9 @@ const SignupCodesList = ({ signupCodes }: { signupCodes: SignupCode[] | undefine
             container
             columns={1}
             spacing={1}
+            pb={4}
         >
-            {signupCodes.map(code => <Grid item xs={1}><SignupCodeItem key={code.code} code={code} /></Grid>)}
+            {signupCodes.sort((a, b) => b.dateCreated - a.dateCreated).map(code => <Grid key={code.code} item xs={1}><SignupCodeItem code={code} /></Grid>)}
         </Grid>
     )
 }
@@ -97,6 +112,17 @@ const SignupCodeItem = ({ code }: { code: SignupCode }) => {
 
     const unusedText = code.used ? 'Used' : 'Unused'
     const unusedTextColor = code.used ? successColor : unusedColor
+
+    const [copiedSnackBarOpen, setCopiedSnackBarOpen] = useState(false)
+
+    const handleSignupCodeClick = async (code: string) => {
+        await navigator.clipboard.writeText(code)
+        setCopiedSnackBarOpen(true)
+    };
+
+    const handleCodeSnackBarClose = () => {
+        setCopiedSnackBarOpen(false)
+    }
 
     return (
         <Card raised>
@@ -115,7 +141,17 @@ const SignupCodeItem = ({ code }: { code: SignupCode }) => {
                                 </Typography>
                             </Paper>
                         </Box>
-                        <Typography variant="h5">
+                        <Snackbar
+                            open={copiedSnackBarOpen}
+                            onClose={handleCodeSnackBarClose}
+                            autoHideDuration={4000}
+                            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                        >
+                            <Alert onClose={handleCodeSnackBarClose} severity='info'>
+                                Code copied!
+                            </Alert>
+                        </Snackbar>
+                        <Typography variant="h5" sx={{ cursor: 'pointer' }} onClick={() => handleSignupCodeClick(code.code)}>
                             {code.code}
                         </Typography>
                     </CardContent>
@@ -138,15 +174,3 @@ const SignupCodeItem = ({ code }: { code: SignupCode }) => {
         </Card>
     )
 }
-
-// <Typography sx={{ mb: 1.5 }} color="text.secondary">
-// adjective
-// </Typography>
-// <Typography variant="body2">
-// well meaning and kindly.
-// <br />
-// {'"a benevolent smile"'}
-// </Typography>
-{/* <CardActions>
-<Button size="small">Learn More</Button>
-</CardActions> */}

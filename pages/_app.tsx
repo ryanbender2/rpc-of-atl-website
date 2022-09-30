@@ -38,17 +38,6 @@ export default function App({ Component, pageProps }: AppProps) {
     <userContext.Provider value={user}>
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
-          <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
           <CssBaseline enableColorScheme />
           <ColorModeToggle />
           <Box
